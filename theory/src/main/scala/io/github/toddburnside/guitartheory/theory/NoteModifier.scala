@@ -15,18 +15,19 @@ object NoteModifier {
   // can get a double flat w/: flat |+| flat
   val flat = NoteModifier(Semitone(-1))
 
-  // TODO: Put these back...
-  //  val sharpSymbol = '♯'
-  //  val flatSymbol = '♭'
+  val sharpSymbol = '♯'
+  val flatSymbol  = '♭'
 
-  val sharpSymbol = '#'
-  val flatSymbol  = 'b'
+//  val sharpSymbol = '#'
+//  val flatSymbol  = 'b'
 
   // it's a bit odd, but it will take any number of sharps or flats in a string
-  def fromString(symbol: String): Option[NoteModifier] = {
+  def parse(symbol: String): Option[NoteModifier] = {
     def modifier(i: Int, c: Char): Option[Int] = c match {
       case `sharpSymbol` => Some(i + 1)
       case `flatSymbol`  => Some(i - 1)
+      case '#'           => Some(i + 1)
+      case 'b'           => Some(i - 1)
       case _             => None
     }
 

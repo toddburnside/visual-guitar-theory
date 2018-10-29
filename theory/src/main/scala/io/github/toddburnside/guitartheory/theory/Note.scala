@@ -34,6 +34,16 @@ object Note {
   val fSharp = Note(f, sharp)
   val gSharp = Note(g, sharp)
 
+  def parse(s: String): Option[Note] = {
+    val Pattern = raw"^([A-G])(.*)".r
+    s match {
+      case Pattern(letter, modifier) =>
+        (NoteLetter.fromString(letter), NoteModifier.parse(modifier))
+          .mapN((l, m) => Note(l, m))
+      case _ => None
+    }
+  }
+
   def getInterval(note1: Note, note2: Note): PitchInterval =
     (note1.letter intervalTo note2.letter) |-| PitchInterval(note1.modifier.semitones) |+| PitchInterval(
       note2.modifier.semitones)
