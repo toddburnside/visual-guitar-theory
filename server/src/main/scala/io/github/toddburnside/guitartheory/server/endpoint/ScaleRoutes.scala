@@ -10,7 +10,7 @@ import org.http4s._
 import org.http4s.circe._
 import org.http4s.dsl.Http4sDsl
 
-class ScaleRoutes[F[_]: Sync](scaleService: ScaleService[F])(implicit H: HttpErrorHandler[F])
+class ScaleRoutes[F[_]: Sync](scaleService: ScaleService[F])(implicit H: ApiErrorHandler[F])
     extends Http4sDsl[F] {
 
   val routes: HttpRoutes[F] = HttpRoutes.of[F] {

@@ -15,7 +15,7 @@ class Module[F[_]: Async: ContextShift] {
   private val scaleService  = new ScaleService[F](scaleRepository)
   private val tuningService = new TuningService[F](tuningRepository)
 
-  implicit val httpErrorHandler: HttpErrorHandler[F] = new HttpErrorHandler[F]
+  implicit val httpErrorHandler: ApiErrorHandler[F] = new ApiErrorHandler[F]
 
   private val scaleRoutes: HttpRoutes[F]  = new ScaleRoutes[F](scaleService).routes
   private val tuningRoutes: HttpRoutes[F] = new TuningRoutes[F](tuningService).routes
