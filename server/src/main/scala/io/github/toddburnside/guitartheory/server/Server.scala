@@ -9,7 +9,7 @@ object Server extends IOApp {
     new HttpServer[IO].server.as(ExitCode.Success)
 }
 
-class HttpServer[F[_]: ConcurrentEffect: ContextShift] {
+class HttpServer[F[_]: ConcurrentEffect: ContextShift: Timer] {
 
   private val module = new Module[F]
 
