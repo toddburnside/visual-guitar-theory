@@ -1,22 +1,35 @@
 package io.github.toddburnside.guitartheory.theory
 
-sealed case class Tuning(name: String, strings: List[Note])
+sealed case class Tuning(name: String, strings: List[(Note, Octave)])
 
 object Tuning {
-  def notesOnString(nutNote: Note, notes: List[ScaleNote]): List[FretNote] = {
-    for {
-      ScaleNote(scaleTone, note) <- notes
-      fret = (nutNote intervalTo note).semitones.value
-    } yield FretNote(fret, scaleTone, note)
-  }
+  import Octave._
 
-  def notesOnNeck(tuning: Tuning, notes: List[ScaleNote]): List[List[FretNote]] =
-    tuning.strings.map(notesOnString(_, notes))
+  val fretsInOctave = 12
+
+  def notesOnString(
+      nutNote: Note,
+      nutOctave: Octave,
+      numFrets: Int,
+      notes: List[ScaleNote]): List[FretNote] =
+    for {
+      fret <- (0 to numFrets).toList
+      pi = PitchInterval(Semitone(fret))
+      nextNote = Note(
+        nutNote.letter,
+        NoteModifier(Semitone(nutNote.modifier.semitones.value + pi.semitones.value)))
+      scaleNote <- notes.find(_.note.isSameAs(nextNote)).fold(Nil: List[ScaleNote])(List(_))
+      octaveAdd  = fret / fretsInOctave
+      nextOctave = Octave(nutOctave.newOctave(nutNote, scaleNote.note).value + octaveAdd)
+    } yield FretNote(fret, scaleNote.scaleTone, scaleNote.note, nextOctave)
+
+  def notesOnNeck(tuning: Tuning, numFrets: Int, notes: List[ScaleNote]): List[List[FretNote]] =
+    tuning.strings.map(s => notesOnString(s._1, s._2, numFrets, notes))
 
   trait TuningOps {
     def self: Tuning
-    def notesOnNeck(notes: List[ScaleNote]): List[List[FretNote]] =
-      Tuning.notesOnNeck(self, notes)
+    def notesOnNeck(numFrets: Int, notes: List[ScaleNote]): List[List[FretNote]] =
+      Tuning.notesOnNeck(self, numFrets, notes)
   }
 
   implicit def toTuningOps(target: Tuning): TuningOps = new TuningOps {
@@ -25,8 +38,25 @@ object Tuning {
 
   // Temporary
   import Note._
-  val standard = Tuning("Standard", List(eNat, aNat, dNat, gNat, bNat, eNat))
-  val dadgad   = Tuning("DADGAD", List(dNat, aNat, dNat, gNat, aNat, dNat))
+  val standard = Tuning(
+    "Standard",
+    List(
+      (eNat, octave3),
+      (aNat, octave3),
+      (dNat, octave4),
+      (gNat, octave4),
+      (bNat, octave4),
+      (eNat, octave5)))
+
+  val dadgad = Tuning(
+    "DADGAD",
+    List(
+      (dNat, octave3),
+      (aNat, octave3),
+      (dNat, octave4),
+      (gNat, octave4),
+      (aNat, octave4),
+      (dNat, octave5)))
 }
 
 sealed case class TuningDb(id: Long, tuning: Tuning)

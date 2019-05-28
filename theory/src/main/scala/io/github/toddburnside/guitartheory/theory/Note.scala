@@ -52,7 +52,7 @@ object Note {
     getInterval(note1, note2) === Monoid[PitchInterval].empty
   implicit val showNote: Show[Note] = Show.show(n => n.letter.show + n.modifier.show)
 
-  // This is strictly equal - must be ths same letter and mmodifier. For note
+  // This is strictly equal - must be ths same letter and modifier. For note
   // equivalence see areSame or note.isSameAs
   implicit val eqNote: Eq[Note] = Eq.fromUniversalEquals
 
