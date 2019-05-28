@@ -6,13 +6,13 @@ object ProjectPlugin extends AutoPlugin {
 
   object autoImport {
     lazy val V = new {
-      val cats       = "1.4.0"
-      val catsEffect = "1.0.0"
-      val kittens    = "1.1.1"
-      val mouse      = "0.19"
-      val http4s     = "0.19.0"
-      val circe      = "0.10.0"
-      val specs2     = "4.1.0"
+      val cats       = "1.6.0"
+      val catsEffect = "1.3.0"
+      val kittens    = "1.2.1"
+      val mouse      = "0.21"
+      val http4s     = "0.20.1"
+      val circe      = "0.11.1"
+      val specs2     = "4.3.4"
       val logback    = "1.2.3"
     }
   }
@@ -53,7 +53,7 @@ object ProjectPlugin extends AutoPlugin {
       "io.circe.syntax._"))
 
   override def projectSettings: Seq[Def.Setting[_]] = Seq(
-    scalaVersion := "2.12.6",
+    scalaVersion := "2.12.8",
     addCompilerPlugin("org.spire-math" %% "kind-projector"     % "0.9.6"),
     addCompilerPlugin("com.olegpy"     %% "better-monadic-for" % "0.2.4")
   )
